@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Candidate Background Checker</title>
+<style>
+body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea, #764ba2); margin: 0; padding: 20px; }
+.box { background: white; max-width: 500px; margin: 20px auto; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+h1, h2 { text-align: center; color: #333; }
+h3 { color: #444; }
+input[type=text], select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+.skills label { display: inline-block; width: 48%; margin: 5px 0; color: #333; }
+button { width: 100%; padding: 12px; margin-top: 15px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+button:hover { background: #4c5fd5; }
+.clear { background: #e74c3c; }
+.hidden { display: none; }
+.best { background: #667eea; color: white; text-align: center; padding: 10px; border-radius: 10px; }
+.best h2 { color: white; margin: 5px 0; }
+.row { display: flex; align-items: center; margin: 8px 0; color: #333; }
+.label { width: 150px; font-size: 14px; }
+.track { flex: 1; background: #eee; height: 16px; border-radius: 10px; }
+.fill { height: 100%; background: #2ecc71; border-radius: 10px; }
+.pct { width: 45px; text-align: right; font-size: 14px; }
+table { width: 100%; border-collapse: collapse; }
+th { background: #667eea; color: white; padding: 8px; }
+td { padding: 8px; border-bottom: 1px solid #ddd; color: #333; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>Candidate Form</h1>
+  <input type="text" id="name" placeholder="name">
+ 
+  <input type="text" id="email" placeholder="Email">
+  <input type="text" id="phone" placeholder="Phone Number (10 digits)">
+
+  <select id="course">
+    <option value="">Select Course</option>
+    <option>B.Sc IT</option>
+    <option>B.Sc CS</option>
+    <option>B.Sc Data Science</option>
+    <option>BCA</option>
+    <option>B.Com Banking</option>
+    <option>BBA</option>
+    <option>Other</option>
+  </select>
+
+  <select id="year">
+    <option value="">Select Year</option>
+    <option>First Year</option>
+    <option>Second Year</option>
+    <option>Third Year</option>
+    <option>Passed Out</option>
+  </select>
+
+  <h3>Select Your Skills</h3>
+  <div class="skills">
+    <label><input type="checkbox" class="skill" value="Web Development"> HTML</label>
+    <label><input type="checkbox" class="skill" value="Web Development"> CSS</label>
+    <label><input type="checkbox" class="skill" value="Web Development"> JavaScript</label>
+    <label><input type="checkbox" class="skill" value="Data Science"> Python</label>
+    <label><input type="checkbox" class="skill" value="Data Science"> Excel</label>
+    <label><input type="checkbox" class="skill" value="Data Science"> Statistics</label>
+    <label><input type="checkbox" class="skill" value="Networking and Linux"> Linux</label>
+    <label><input type="checkbox" class="skill" value="Networking and Linux"> Networking</label>
+    <label><input type="checkbox" class="skill" value="Networking and Linux"> Shell Script</label>
+    <label><input type="checkbox" class="skill" value="Banking and Finance"> Accounting</label>
+    <label><input type="checkbox" class="skill" value="Banking and Finance"> Tally</label>
+    <label><input type="checkbox" class="skill" value="Banking and Finance"> Banking Knowledge</label>
+    <label><input type="checkbox" class="skill" value="Programming"> Java</label>
+    <label><input type="checkbox" class="skill" value="Programming"> C / C++</label>
+    <label><input type="checkbox" class="skill" value="Programming"> Data Structures</label>
+  </div>
+
+  <button onclick="submitForm()">Submit</button>
+</div>
+
+<div class="box hidden" id="resultBox">
+  <h2>Result</h2>
+  <p id="info"></p>
+  <div class="best">
+    <p>Best Matching Domain</p>
+    <h2 id="bestName"></h2>
+  </div>
+  <p id="message"></p>
+  <h3>Domain Match</h3>
+  <div id="chart"></div>
+</div>
+
+<div class="box">
+  <h2>All Candidates</h2>
+  <table>
+    <tr><th>No</th><th>Name</th><th>Course</th><th>Best Domain</th></tr>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <button class="clear" onclick="clearAll()">Delete All</button>
+</div>
+
+<script>
+var courseDomain = {
+  "B.Sc IT": "Web Development",
+  "B.Sc CS": "Programming",
+  "B.Sc Data Science": "Data Science",
+  "BCA": "Programming",
+  "B.Com Banking": "Banking and Finance",
+  "BBA": "Banking and Finance"
+};
+
+function submitForm() {
+  var name = document.getElementById("name").value;
+  var email = document.getElementById("email").value;
+  var phone = document.getElementById("phone").value;
+  var course = document.getElementById("course").value;
+  var year = document.getElementById("year").value;
+
+  if (name == "" || email == "" || phone == "" || course == "" || year == "") {
+    alert("Please fill all the details");
+    return;
+  }
+  if (email.indexOf("@") == -1) {
+    alert("Enter a correct email");
+    return;
+  }
+  if (phone.length != 10) {
+    alert("Phone number must be 10 digits");
+    return;
+  }
+
+  var counts = {
+    "Web Development": 0,
+    "Data Science": 0,
+    "Networking and Linux": 0,
+    "Banking and Finance": 0,
+    "Programming": 0
+  };
+
+  var boxes = document.getElementsByClassName("skill");
+  var total = 0;
+  for (var i = 0; i < boxes.length; i++) {
+    if (boxes[i].checked) {
+      counts[boxes[i].value] = counts[boxes[i].value] + 1;
+      total = total + 1;
+    }
+  }
+
+  if (total == 0) {
+    alert("Please select at least one skill");
+    return;
+  }
+
+  var best = "";
+  var bestCount = 0;
+  for (var d in counts) {
+    if (counts[d] > bestCount) {
+      best = d;
+      bestCount = counts[d];
+    }
+  }
+
+  var message = "";
+  var courseSuits = courseDomain[course];
+
+  if (courseSuits == undefined) {
+    message = "Your skills match the " + best + " domain.";
+  } else if (courseSuits == best) {
+    message = "Great! Your course (" + course + ") and your skills both match " + best + ".";
+  } else {
+    message = "Your course usually suits " + courseSuits + ", but your skills match " +
+              best + ". Learn some " + courseSuits + " skills to improve your profile.";
+  }
+
+  var chart = "";
+  for (var d2 in counts) {
+    var percent = Math.round((counts[d2] / 3) * 100);
+    chart = chart +
+      "<div class='row'>" +
+      "<div class='label'>" + d2 + "</div>" +
+      "<div class='track'><div class='fill' style='width:" + percent + "%'></div></div>" +
+      "<div class='pct'>" + percent + "%</div>" +
+      "</div>";
+  }
+
+  document.getElementById("info").innerHTML =
+    "<b>Name:</b> " + name + "<br><b>Course:</b> " + course + " (" + year + ")";
+  document.getElementById("bestName").innerText = best;
+  document.getElementById("message").innerText = message;
+  document.getElementById("chart").innerHTML = chart;
+  document.getElementById("resultBox").className = "box";
+
+  var list = JSON.parse(localStorage.getItem("candidates"));
+  if (list == null) {
+    list = [];
+  }
+  list.push({ name: name, email: email, phone: phone, course: course, year: year, best: best });
+  localStorage.setItem("candidates", JSON.stringify(list));
+
+  showTable();
+}
+
+function showTable() {
+  var list = JSON.parse(localStorage.getItem("candidates"));
+  if (list == null) {
+    list = [];
+  }
+
+  var rows = "";
+  for (var i = 0; i < list.length; i++) {
+    rows = rows + "<tr><td>" + (i + 1) + "</td><td>" + list[i].name +
+           "</td><td>" + list[i].course + "</td><td>" + list[i].best + "</td></tr>";
+  }
+  if (list.length == 0) {
+    rows = "<tr><td colspan='4'>No candidates yet</td></tr>";
+  }
+  document.getElementById("tableBody").innerHTML = rows;
+}
+
+function clearAll() {
+  localStorage.removeItem("candidates");
+  showTable();
+}
+
+showTable();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c9fa5);
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.box {
+  background: #ffffff;
+  max-width: 520px;
+  margin: 25px auto;
+  padding: 28px;
+  border-radius: 20px;
+  border-top: 6px solid #ff7a18;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+  text-align: center;
+  color: #203a43;
+  margin-top: 0;
+}
+
+h2 {
+  text-align: center;
+  color: #203a43;
+}
+
+h3 {
+  color: #2c9fa5;
+  border-bottom: 2px dashed #ffd6b0;
+  padding-bottom: 6px;
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px;
+  margin: 7px 0;
+  border: 2px solid #e0eef0;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+  background: #f7fcfc;
+}
+
+input[type=text]:focus, select:focus {
+  border-color: #ff7a18;
+  outline: none;
+  background: white;
+}
+
+.skills label {
+  display: inline-block;
+  width: 47%;
+  margin: 4px 1%;
+  padding: 8px;
+  background: #eaf7f7;
+  border-radius: 8px;
+  color: #203a43;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.skills label:hover {
+  background: #ffe9d6;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 18px;
+  background: linear-gradient(135deg, #ff7a18, #ffb347);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: linear-gradient(135deg,
